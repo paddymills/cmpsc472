@@ -1,0 +1,37 @@
+
+semaphore wsem;
+semaphore mutex;
+int read_count = 0;
+
+void writer(int i) {
+	wait(wsem);
+	
+	// <write>
+	cout << "[W" << i << "] " << "read..." << endl;
+
+	signal(wsem);
+}
+
+void reader(int i) {
+	wait(mutex);
+		read_count++;
+		if (read_count == 1) wait(wsem);
+	signal(mutex);
+
+	// <read>
+	cout << "[R" << i << "] " << "read..." << endl;
+
+	wait(mutex);
+		read_count--;
+		if (read_count == 0) signal(wsem);
+	signal(mutex);
+}
+
+main() {
+	initialsem(wsem, 1);
+	initialsem(mutex, 1);
+
+	writer(1);
+	reader(1);
+	reader(2);
+}
