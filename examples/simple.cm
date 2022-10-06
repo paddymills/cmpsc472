@@ -1,0 +1,18 @@
+/////////////////////////////////////////////////////////
+/* This program will illustrate a simple race condition 
+   If run multiple times, the output varies             */
+/////////////////////////////////////////////////////////
+
+void say_hello (char id) 
+{ 
+  cout << "hello from process " << id << endl; 
+} 
+
+main() 
+{ 
+  cobegin 
+  { 
+    say_hello('A'); say_hello('B'); say_hello('C'); 
+  } 
+  cout << " all finished " << endl; 
+}
