@@ -1,0 +1,6 @@
+theme = "onedark"
+
+[editor]
+line-number = "relative"
+color-modes = true
+
