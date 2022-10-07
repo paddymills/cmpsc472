@@ -7,7 +7,7 @@ void writer(int i) {
 	wait(wsem);
 	
 	// <write>
-	cout << "[W" << i << "] " << "read..." << endl;
+	cout << "[W" << i << "] " << "write..." << endl;
 
 	signal(wsem);
 }
