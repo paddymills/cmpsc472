@@ -1,0 +1,45 @@
+semaphore emptypot;
+semaphore fullpot;
+semaphore mutex;
+int servings = 0;
+
+const int MAX_SERVINGS = 10;
+int runs = 0;
+const int MAX_RUNS = 5;
+
+void savage(int n) {
+	while (1) {
+		wait(mutex);
+			if (servings == 0) {
+				signal(emptypot);
+				wait(fullpot);
+				servings = MAX_SERVINGS;
+			}
+			servings--;
+		signal(mutex);
+		// eat
+		cout << "savage " << n << " is eating..." << endl;
+	}
+}
+
+void cook() {
+	while (runs < MAX_RUNS) {
+		wait(emptypot);
+		// fill pot;
+		cout << "cook fills the pot" << endl;
+        runs++;
+		signal(fullpot);
+	}
+}
+
+main() {
+    initialsem(emptypot, 0);
+    initialsem(fullpot, 0);
+    initialsem(mutex, 1);
+	cobegin {
+        cook();
+		savage(1);
+		savage(2);
+		savage(3);
+	}
+}
