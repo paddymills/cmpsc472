@@ -1,0 +1,34 @@
+////////////////////////////////////////////////
+/* This program demonstrates the use of a  
+   semaphore to enforce mutual exclusion on a 
+   shared resources.                           */
+/////////////////////////////////////////////////
+
+const int m = 5;
+int sum;
+semaphore mutex;
+
+void incr (char id)
+{
+   int i;
+   for (i = 1; i <= m; i = i + 1)
+   {  
+     wait(mutex);
+     sum = sum + 1;
+     cout << id << " sum =" << sum ;
+     cout << "  " << id << endl;
+     signal(mutex);
+   }
+}
+
+main()
+{
+   cout << endl;
+   sum = 0;
+   initialsem (mutex,1);
+   cobegin 
+   {
+      incr ( 'A'); incr ('B'); incr ( 'C');
+   }
+   cout << "The sum is " << sum <<endl;
+}

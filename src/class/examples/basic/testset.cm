@@ -1,0 +1,41 @@
+/* This program illustrates test and set */
+
+int lock = 0;
+const int m = 5;
+int sum;
+
+atomic int Test_and_Set (int& target) 
+  {
+     int test;
+     test = target;
+     target = 1;
+     return test;
+  } 
+
+void incr(char id)
+  {
+      int i;
+      for (i=1; i<= m; i++) 
+          {
+            while (Test_and_Set (lock))
+                  { ;}
+
+            sum = sum + 1;
+	    cout << id << " sum =" << sum ;
+	    cout << "  " << id << endl;
+
+            lock = 0;
+
+           }
+   }
+
+ main()
+   {
+      cout << endl;
+      sum = 0;
+      cobegin 
+          {
+	   incr ( 'A'); incr ('B'); incr ( 'C');
+	  }
+      cout << "The sum is " << sum <<endl;
+   }

@@ -1,0 +1,50 @@
+//////////////////////////////////////////////////////////
+/* This program demonstrates process synchronization 
+   using semaphores.  In this example process C must do no 
+   work until both process B and process A finish. 
+   The 'mutex' semaphore prevents the race condition 
+   found in simple.cm                                   */
+//////////////////////////////////////////////////////////
+
+semaphore mutex; 
+semaphore A_finish, B_finish; 
+
+void say_hello (char id) 
+{ 
+  wait(mutex); 
+  cout << "hello from process " << id << endl; 
+  signal(mutex);
+} 
+
+void A(void) 
+{ 
+  say_hello('A'); 
+  signal(A_finish); 
+} 
+
+void B(void) 
+{ 
+  say_hello('B'); 
+  signal(B_finish); 
+} 
+
+void C(void) 
+{ 
+  wait(A_finish); 
+  wait(B_finish); 
+  say_hello('C'); 
+} 
+
+main() 
+{ 
+  initialsem(mutex, 1); 
+  initialsem(A_finish, 0); 
+  initialsem(B_finish, 0); 
+
+  cobegin 
+  { 
+    A(); B(); C(); 
+  } 
+
+  cout << " all finished " << endl; 
+}

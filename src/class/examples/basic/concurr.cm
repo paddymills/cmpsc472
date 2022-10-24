@@ -1,0 +1,43 @@
+////////////////////////////////////////////////////////////////
+/* This program demonstrates concurrent execution of processes*/
+////////////////////////////////////////////////////////////////
+
+const int m = 5;
+
+ void procA (char id)
+{	
+	int i;
+	
+	for (i = 1; i <= m; i = i + 1)
+	{
+		cout << id << id << id << id << id << endl;
+	}
+}
+
+void procB (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		cout << id << id << id << id << id << endl;
+	}
+}
+
+void procC (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		cout << id << id << id << id << id << endl;
+	}
+}
+
+main()
+{      
+        cout << endl;
+	    	
+	cobegin 
+	{
+		procA ('A'); procB ('B'); procC ('C'); 
+	}
+}

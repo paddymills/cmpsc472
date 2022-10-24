@@ -1,0 +1,52 @@
+//////////////////////////////////////////////////////////////
+/* This program demonstrates process synchronization using 
+   a counting semaphore. These processes are synchronized to run 
+   without interference during the "cout".                  */
+//////////////////////////////////////////////////////////////
+
+const int m = 5;
+semaphore mutex;
+ void procA (char id)
+{	
+	int i;
+	
+	for (i = 1; i <= m; i = i + 1)
+	{
+		wait(mutex);
+		cout << id<< id <<id <<id << id << endl;
+		signal(mutex);
+	}
+}
+
+void procB (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		wait(mutex);
+		cout << id<< id <<id <<id << id << endl;
+		signal(mutex);
+	}
+}
+
+void procC (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		wait(mutex);
+		cout << id<< id <<id <<id << id << endl;
+		signal(mutex);
+	}
+}
+
+main()
+{      
+	initialsem (mutex, 1);
+        cout << endl;
+	    	
+	cobegin 
+	{
+		procA ('A'); procB ('B'); procC ('C'); 
+	}
+}

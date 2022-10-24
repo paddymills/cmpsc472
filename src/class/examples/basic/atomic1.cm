@@ -1,0 +1,46 @@
+////////////////////////////////////////////////////////////////
+/* This program demonstrates concurrent execution of processes*/
+/* A and B will run atomically, but C will not                */
+/* Running all three atomically would solve the concurrency   */
+/* problem, but is a bad idea since it disallows concurrency  */
+////////////////////////////////////////////////////////////////
+
+const int m = 5;
+
+atomic void procA (char id)
+{	
+	int i;
+	
+	for (i = 1; i <= m; i = i + 1)
+	{
+		cout << id << id << id << id << id << endl;
+	}
+}
+
+atomic void procB (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		cout << id << id << id << id << id << endl;
+	}
+}
+
+void procC (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		cout << id << id << id << id << id << endl;
+	}
+}
+
+main()
+{      
+        cout << endl;
+	    	
+	cobegin 
+	{
+		procA ('A'); procB ('B'); procC ('C'); 
+	}
+}

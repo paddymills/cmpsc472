@@ -1,0 +1,22 @@
+/////////////////////////////////////////////////////////////////
+/* This program demonstrates mutual exclusion with a semaphore */
+/////////////////////////////////////////////////////////////////
+
+semaphore mutex; 
+
+void say_hello (char id) 
+{ 
+  wait(mutex); 
+  cout << "hello from process " << id << endl; 
+  signal(mutex); 
+} 
+
+main() 
+{ 
+  initialsem(mutex,1); 
+  cobegin 
+  { 
+    say_hello('A'); say_hello('B'); say_hello('C'); 
+  } 
+  cout << " all finished " << endl; 
+}

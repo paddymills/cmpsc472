@@ -1,0 +1,36 @@
+/* This program demonstrates the use of monitors to 
+   implement mutual exclusion                       */
+/////////////////////////////////////////////////////
+
+monitor simple_monitor 
+{ 
+  void say_hello (char id) 
+  { 
+    cout << "hello from process " << id << endl; 
+  } 
+
+} 
+
+void A() 
+{ 
+  say_hello('A'); 
+} 
+
+void B() 
+{ 
+  say_hello('B'); 
+} 
+
+void C() 
+{ 
+  say_hello('C'); 
+} 
+
+main() 
+{ 
+  cobegin 
+  { 
+    A(); B(); C(); 
+  } 
+  cout << " all finished " << endl; 
+}

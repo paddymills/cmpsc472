@@ -1,0 +1,58 @@
+//////////////////////////////////////////////////////////////
+/* This program demonstrates process synchronization using 
+   binary semaphores. These processes are synchronized to run 
+   in the order A,B,C.                                      */
+//////////////////////////////////////////////////////////////
+
+const int m = 5;
+binarysem semA;
+binarysem semB;
+binarysem semC;
+
+ void procA (char id)
+{	
+	int i;
+	
+	for (i = 1; i <= m; i = i + 1)
+	{
+		wait(semA);
+		cout << id << id << id << id << id << endl;
+		signal(semB);
+	}
+}
+
+void procB (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		wait(semB);
+		cout << id << id << id << id << id << endl;
+		signal(semC);
+	}
+}
+
+void procC (char id)
+{
+	int i;
+	for (i = 1; i <= m; i = i + 1)
+	{
+		wait(semC);
+		cout << id << id << id << id << id << endl;
+		signal(semA);
+	}
+}
+
+main()
+{      
+	initialsem (semA, 1);
+	initialsem (semB, 0);
+	initialsem (semC, 0);
+
+        cout << endl;
+	    	
+	cobegin 
+	{
+		procA ('A'); procB ('B'); procC ('C'); 
+	}
+}
