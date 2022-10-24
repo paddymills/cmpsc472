@@ -1,0 +1,74 @@
+//***************************************************
+//** HW#3 Problem 2b:                              **
+//**               order.cm                        **
+//**                                               **
+//**    Patrick Miller                             **
+//**      pjm6196                                  **
+//***************************************************
+
+semaphore mutex;
+
+///////////////////////////////////
+atomic  void PrintOut(int pid)
+{
+  switch (pid)
+  {  case 1: 
+     {cout << "Process 1" << endl; break;}
+     case 2: 
+     {cout << "Process 2"  << endl; break;}
+     case 3: 
+     {cout << "Process 3" << endl; break;}
+  } 
+}
+
+
+///////////////////////////////////
+void Process1()
+{
+  PrintOut(1);
+
+  // signal for process 2 or 3 to run
+  signal(mutex);
+}
+
+
+///////////////////////////////////
+void Process2()
+{
+  // wait for Process 1 to finish
+  wait(mutex);
+
+  PrintOut(2);
+
+  // signal for Process 3 to run(if it hasn't)
+  signal(mutex); 
+}
+
+
+///////////////////////////////////
+void Process3()
+{
+  // wait for Process 1 to finish
+  wait(mutex);
+
+  PrintOut(3);
+
+  // signal for Process 2 to run(if it hasn't)
+  signal(mutex); 
+}
+
+
+///////////////////////////////////
+main()
+{
+  // initialize semaphore to 0
+  //   so Process{2,3} block until Process1
+  //   is done
+  initialsem(mutex, 0);
+
+  cobegin {     // This will run all 3 processes concurrently
+    Process1(); 
+    Process2(); 
+    Process3();
+  }
+}

@@ -1,0 +1,67 @@
+//**********************
+//**  HW#3 Problem 3  ** 
+//**      add.cm      **
+//**                  **
+//**  Patrick Miller  **
+//**    pjm6196       **
+//**********************
+
+
+/* Global Variables */
+  int total;  
+  int Low1, High1, Low2, High2;
+  semaphore mutex;
+
+/////////////////////////////////////////////////////
+void add(int lower, int upper)
+//Adds numbers in the range lower to upper inclusive to total
+{
+  int i;   
+  for (i=lower;i<=upper;i++) 
+  {
+    // wait for total to be usable
+    wait(mutex);
+      total = total + i;
+
+    // signal total is free to use for other process
+    signal(mutex);
+  }
+}
+
+
+/////////////////////////////////////////////////////
+main() 
+{
+   total = 0;
+   cout << "This program will add numbers in a given range." << endl;
+   cout << "You will need to supply 2 ranges." << endl;
+   cout << "Enter the range 1 low range value ";
+   cin >> Low1;
+   cout << "Enter the range 1 high range value ";
+   cin >> High1;
+   cout << "Enter the range 2 low range value ";
+   cin >> Low2;
+   cout << "Enter the range 2 high range value ";
+   cin >> High2;
+
+  // initialize mutex to 1
+  //   so that first process is not blocked
+   initialsem(mutex, 1);
+   cobegin {
+    add(Low1,High1); 
+    add(Low2,High2);
+   }
+    
+   cout << "The sum from [";
+   cout << Low1;
+   cout <<"..";
+   cout << High1;
+   cout << "] and [";
+   cout << Low2;
+   cout <<"..";
+   cout << High2;
+   cout << "] is ";
+   cout << total << endl;
+
+} 
+

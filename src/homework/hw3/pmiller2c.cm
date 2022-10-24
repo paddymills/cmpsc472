@@ -1,0 +1,77 @@
+//***************************************************
+//** HW#3 Problem 2c:                              **
+//**               order.cm                        **
+//**                                               **
+//**    Patrick Miller                             **
+//**      pjm6196                                  **
+//***************************************************
+
+semaphore p1done, p2done, p3done;
+
+///////////////////////////////////
+atomic  void PrintOut(int pid)
+{
+  switch (pid)
+  {  case 1: 
+     {cout << "Process 1" << endl; break;}
+     case 2: 
+     {cout << "Process 2"  << endl; break;}
+     case 3: 
+     {cout << "Process 3" << endl; break;}
+  } 
+}
+
+
+///////////////////////////////////
+void Process1()
+{
+  int i;
+  for(i=0; i<3; i++) {
+    wait(p3done);
+    PrintOut(1); 
+    signal(p1done);
+  }
+}
+
+
+///////////////////////////////////
+void Process2()
+{
+  int i;
+  for(i=0; i<3; i++) {
+    wait(p1done);
+    PrintOut(2); 
+    signal(p2done);
+  }
+}
+
+
+///////////////////////////////////
+void Process3()
+{
+  int i;
+  for(i=0; i<3; i++) {
+    wait(p2done);
+    PrintOut(3); 
+    signal(p3done);
+  }
+}
+
+
+///////////////////////////////////
+main()
+{
+  // initialize all semephores as 0
+  //   to block their wait calls,
+  //   with the exception of p3done
+  //   so that p1 gets first entry
+  initialsem(p1done, 0);
+  initialsem(p2done, 0);
+  initialsem(p3done, 1);
+  
+  cobegin {     // This will run all 3 processes concurrently
+    Process1(); 
+    Process2(); 
+    Process3();
+  }
+}
