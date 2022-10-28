@@ -1,0 +1,26 @@
+# PCB - Process Control Block
+## Common Details of PCB
+- Process identification info
+	- unique ID (PID)
+	- parent process PID
+	- user ID
+	- user group ID
+- Processor state info
+	- user visible registers
+	- control & status registers (PSW: process status word)
+	- stack pointers
+- Process control info
+	- scheduling & state info
+		- process state
+		- priority
+		- CPU usage
+		- Event
+	- process structure info
+		- child process PID's
+		- related process PID's
+		- in same queue as other
+	- Interprocess Communication
+	- Process privileges
+	- memory mgmt info
+	- resource ownership/utilization
+	- misc (accounting info, ...)
