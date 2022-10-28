@@ -4,3 +4,6 @@
 
 # submissions
 *.zip
+
+# obsidian vault
+vault/.obsidian/
