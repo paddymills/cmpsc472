@@ -54,13 +54,13 @@ main() {
     initialsem(hayride_queue, 1);
     initialsem(excuse_queue, 1);
 
+    int i; // for spawn loop counters
     cobegin {
         // spawn parents
         mother();
         father();
 
         // spawn children
-        int i;
         for (i=0; i<NUM_CHILDREN; i += 1) {
             child(i);
         }
