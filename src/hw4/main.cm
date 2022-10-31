@@ -1,15 +1,19 @@
 
-semaphore seated; // number of people seated (excludes Father)
-semaphore carve_turkey;
-semaphore mother_child_available; // mother and child8 available for hayride
-semaphore hayride_queue;
-semaphore excuse_queue;
+semaphore seated;           // number of people seated (excludes Father)
+semaphore carve_turkey;     // turkey is carved
+semaphore hayride_queue;    // mutex for hayride queue
+semaphore excuse_queue;     // mutex for to be excused queue
 
-const int NUM_CHILDREN = 8;
-const int NUM_RELATIVES = 6;
+int num_seated = 0;
 
 atomic void print(string str) {
     cout << str << endl;
+}
+
+void signal_seated() {
+    wait(seated);
+        num_seated += 1;
+    signal(seated);
 }
 
 void mother() {
@@ -18,6 +22,9 @@ void mother() {
     // go on hayride (with child 8)
     // enter house and wash up
     // put meal on table
+    signal_seated()
+    print("Mother is sitting at table.")
+
     // eat dinner
     // read favorite book
 
@@ -31,6 +38,9 @@ void child(int id) {
     // rake leaves
     // go on hayride
     // clean up and sit at table
+    signal_seated()
+    print("Child {n} is sitting at table.")
+
     // eat dinner
     // <be excused>
     // go out and play
@@ -40,15 +50,17 @@ void relative(int id) {
     // arrive at farm
     // go on hayride
     // clean up and sit at table
+    signal_seated()
+    print("Relative {n} is sitting at table.")
+
     // eat dinner
     // <be excused>
     // go home
 }
 
 main() {
-    initialsem(seated, -1 * (1 + NUM_CHILDREN + NUM_RELATIVES));
+    initialsem(seated, 1);
     initialsem(carve_turkey, 0);
-    initialsem(mother_child_available, -1);
 
     // queue controls
     initialsem(hayride_queue, 1);
