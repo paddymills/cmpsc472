@@ -1,0 +1,73 @@
+
+semaphore seated; // number of people seated (excludes Father)
+semaphore carve_turkey;
+semaphore mother_child_available; // mother and child8 available for hayride
+semaphore hayride_queue;
+semaphore excuse_queue;
+
+atomic void print(string str) {
+    cout << str << endl;
+}
+
+void mother() {
+    // make meal
+    // put foot in oven
+    // go on hayride (with child 8)
+    // enter house and wash up
+    // put meal on table
+    // eat dinner
+    // read favorite book
+
+}
+
+void father() {
+
+}
+
+void child(int id) {
+    // rake leaves
+    // go on hayride
+    // clean up and sit at table
+    // eat dinner
+    // <be excused>
+    // go out and play
+}
+
+void relative(int id) {
+    // arrive at farm
+    // go on hayride
+    // clean up and sit at table
+    // eat dinner
+    // <be excused>
+    // go home
+}
+
+main() {
+    const int NUM_CHILDREN = 8;
+    const int NUM__RELATIVES = 6;
+
+    initialsem(seated, -1 * (1 + NUM_CHILDREN + NUM__RELATIVES));
+    initialsem(carve_turkey, 0);
+    initialsem(mother_child_available, -1);
+
+    // queue controls
+    initialsem(hayride_queue, 1);
+    initialsem(excuse_queue, 1);
+
+    cobegin {
+        // spawn parents
+        mother();
+        father();
+
+        // spawn children
+        int i;
+        for (i=0; i<NUM_CHILDREN; i++) {
+            child(i);
+        }
+
+        // spawn relatives
+        for (i=0; i<NUM__RELATIVES; i++) {
+            relative(i);
+        }
+    }
+}
