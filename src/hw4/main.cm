@@ -5,6 +5,9 @@ semaphore mother_child_available; // mother and child8 available for hayride
 semaphore hayride_queue;
 semaphore excuse_queue;
 
+const int NUM_CHILDREN = 8;
+const int NUM_RELATIVES = 6;
+
 atomic void print(string str) {
     cout << str << endl;
 }
@@ -43,10 +46,7 @@ void relative(int id) {
 }
 
 main() {
-    const int NUM_CHILDREN = 8;
-    const int NUM__RELATIVES = 6;
-
-    initialsem(seated, -1 * (1 + NUM_CHILDREN + NUM__RELATIVES));
+    initialsem(seated, -1 * (1 + NUM_CHILDREN + NUM_RELATIVES));
     initialsem(carve_turkey, 0);
     initialsem(mother_child_available, -1);
 
@@ -61,12 +61,12 @@ main() {
 
         // spawn children
         int i;
-        for (i=0; i<NUM_CHILDREN; i++) {
+        for (i=0; i<NUM_CHILDREN; i += 1) {
             child(i);
         }
 
         // spawn relatives
-        for (i=0; i<NUM__RELATIVES; i++) {
+        for (i=0; i<NUM_RELATIVES; i += 1) {
             relative(i);
         }
     }
