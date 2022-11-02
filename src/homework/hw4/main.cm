@@ -1,0 +1,181 @@
+
+semaphore seated;           // number of people seated (excludes Father)
+semaphore carve_turkey;     // turkey is carved
+semaphore hayride_queue;    // mutex for hayride queue
+semaphore excused;          // to be excused
+
+int num_seated = 0;
+const int ACTION_LEN = 64;          // length of action string
+const int NUM_OTHERS = 1 + 8 + 6;   // number of people not father (mother + children + relatives)
+
+atomic void print(string title, int id, string str) {
+    cout << title << " ";
+
+    if (id > 0)
+        cout << id << " ";
+    
+    cout << str << endl;
+}
+
+void delay(int duration) {
+    // TODO: simulate delay
+    int i;
+    int delay;
+    
+    delay = random(duration * 10); 
+    for (i = 0; i < delay; i++);
+}
+
+void signal_seated() {
+    wait(seated);
+        num_seated = num_seated + 1;
+    signal(seated);
+}
+
+void mother() {
+    // init vars
+    string[6] title;
+    string[ACTION_LEN] action;
+    int id = 0;
+
+    // set title
+    stringCopy(title, "Mother");
+
+    // make meal
+    stringCopy(action, "is preparing the meal.");
+    print(title, id, action);
+    delay(10);
+
+    // put foot in oven
+    stringCopy(action, "is putting food in the oven.");
+    print(title, id, action);
+    delay(1);
+    
+    // go on hayride (with child 8)
+
+    // enter house and wash up
+    stringCopy(action, "is sitting at table.");
+    print(title, id, action);
+    
+    // put meal on table
+    signal_seated();
+    stringCopy(action, "is sitting at table.");
+    print(title, id, action);
+
+    // eat dinner
+    stringCopy(action, "is eating.");
+    print(title, id, action);
+
+    // read favorite book
+    stringCopy(action, "goes to read her book.");
+    print(title, id, action);
+
+}
+
+void father() {
+
+}
+
+void child(int id) {
+    // init vars
+    string[5] title;
+    string[ACTION_LEN] action;
+
+    // set title
+    stringCopy(title, "Child");
+
+    // rake leaves
+    stringCopy(action, "is raking leaves.");
+    print(title, id, action);
+    delay(2);
+
+    // go on hayride
+
+    // clean up and sit at table
+    signal_seated();
+    stringCopy(action, "is sitting at table.");
+    print(title, id, action);
+
+    // eat dinner
+    stringCopy(action, "is eating.");
+    print(title, id, action);
+
+    // done eating -> be excused
+    stringCopy(action, "is done eating.");
+    print(title, id, action);
+    wait(excused);      // wait to be excused
+    signal(excused);    // don't block others
+
+    // go out and play
+    stringCopy(action, "goes out to play.");
+    print(title, id, action);
+}
+
+void relative(int id) {
+    // init vars
+    string[8] title;
+    string[ACTION_LEN] action;
+
+    // set title
+    stringCopy(title, "Relative");
+
+    // arrive at farm
+    stringCopy(action, "arrives.");
+    print(title, id, action);
+
+    // go on hayride
+
+
+    // clean up and sit at table
+    signal_seated();
+    stringCopy(action, "is sitting at table.");
+    print(title, id, action);
+
+    // eat dinner
+    stringCopy(action, "is eating.");
+    print(title, id, action);
+    delay(2);
+
+    // done eating -> be excused
+    stringCopy(action, "is done eating.");
+    print(title, id, action);
+    wait(excused);      // wait to be excused
+    signal(excused);    // don't block others
+
+    // go home
+    stringCopy(action, "goes home.");
+    print(title, id, action);
+}
+
+main() {
+    initialsem(seated, 1);
+    initialsem(carve_turkey, 0);
+
+    // queue controls
+    initialsem(hayride_queue, 1);
+    initialsem(excuse_queue, 0);
+
+    cobegin {
+        // spawn parents
+        mother();
+        father();
+
+        // spawn children
+        child(1);
+        child(2);
+        child(3);
+        child(4);
+        child(5);
+        child(6);
+        child(7);
+        child(8);
+
+        // spawn relatives
+        relative(1);
+        relative(2);
+        relative(3);
+        relative(4);
+        relative(5);
+        relative(6);
+    }
+}
