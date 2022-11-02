@@ -1,0 +1,56 @@
+
+#include <queue.cm>
+
+int needs_ride = 15;
+
+binarysem access = 1;
+
+void give_rides() {
+    int first = 0;
+    int pid;
+
+    while (needs_ride > 0) {
+        pid = dequeue(first);
+        revive(pid);
+        needs_ride--;
+    }
+}
+
+void proc(int a) {
+    enqueue(which_proc(), a);
+
+    suspend();
+
+    wait(access);
+        if (a == 1)
+            cout << "Adult";
+        else
+            cout << "Child";
+
+        cout << " gets a ride" << endl;
+    signal(access);
+}
+
+main() {
+    cobegin {
+        proc(1);
+
+        proc(1);
+        proc(1);
+        proc(1);
+        proc(1);
+        proc(1);
+        proc(1);
+        
+        proc(2);
+        proc(2);
+        proc(2);
+        proc(2);
+        proc(2);
+        proc(2);
+        proc(2);
+        proc(2);
+
+        give_rides();
+    }
+}

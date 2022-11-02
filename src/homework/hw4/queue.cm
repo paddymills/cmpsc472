@@ -1,0 +1,43 @@
+
+int end = 0;
+int procs[16];
+int data[16];
+
+binarysem acc = 1;
+
+void enqueue(int proc_id, int num) {
+    wait(acc);
+        procs[end] = proc_id;
+        data[end] = num;
+        end++;
+    signal(acc);
+}
+
+int dequeue(int index) {
+    int i;
+    int result;
+
+    wait(acc);
+        result = procs[index];
+        for (i = index; i < end; i++) {
+            procs[i] = procs[i+1];
+            data[i] = data[i+1];
+        }
+
+        procs[end] = 0;
+        data[end] = 0;
+        end--;
+    signal(acc);
+
+    return result;
+}
+
+int show(int index) {
+    int result;
+
+    wait(acc);
+        result = data[index];
+    signal(acc);
+
+    return result;
+}

@@ -1,7 +1,8 @@
 # baci
-test.cm
+# test.cm
 *.lst
 *.pco
+*.pob
 
 # submissions
 *.zip
