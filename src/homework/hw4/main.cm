@@ -6,7 +6,7 @@ semaphore excused;          // to be excused
 
 int num_seated = 0;
 const int ACTION_LEN = 64;          // length of action string
-const int NUM_OTHERS = 1 + 8 + 6;   // number of people not father (mother + children + relatives)
+const int NUM_OTHERS = 15;   // number of people not father (1 mother + 8 children + 6 relatives)
 
 atomic void print(string title, int id, string str) {
     cout << title << " ";
@@ -54,17 +54,27 @@ void mother() {
     // go on hayride (with child 8)
 
     // enter house and wash up
-    stringCopy(action, "is sitting at table.");
+    stringCopy(action, "is washing up.");
     print(title, id, action);
     
     // put meal on table
+    stringCopy(action, "is putting the meal on the table.");
+    print(title, id, action);
+
+    // sit at table
     signal_seated();
     stringCopy(action, "is sitting at table.");
     print(title, id, action);
 
     // eat dinner
+    wait(carve_turkey);
     stringCopy(action, "is eating.");
     print(title, id, action);
+
+    // done eating -> be excused
+    stringCopy(action, "is done eating.");
+    print(title, id, action);
+    wait(excused);      // wait to be excused
 
     // read favorite book
     stringCopy(action, "goes to read her book.");
@@ -73,7 +83,24 @@ void mother() {
 }
 
 void father() {
+    int i;
 
+    while (1) {
+        wait(seated);
+            if (num_seated == NUM_OTHERS) {
+                signal(seated); // probably don't need this
+                break;
+            }
+        signal(seated);
+    }
+
+    // signal turkeyis carved
+    for (i = 0; i < NUM_OTHERS; i++)
+        signal(carve_turkey);
+
+    // signal everyone is excused
+    for (i = 0; i < NUM_OTHERS; i++)
+        signal(excused);
 }
 
 void child(int id) {
@@ -97,6 +124,7 @@ void child(int id) {
     print(title, id, action);
 
     // eat dinner
+    wait(carve_turkey);
     stringCopy(action, "is eating.");
     print(title, id, action);
 
@@ -104,7 +132,6 @@ void child(int id) {
     stringCopy(action, "is done eating.");
     print(title, id, action);
     wait(excused);      // wait to be excused
-    signal(excused);    // don't block others
 
     // go out and play
     stringCopy(action, "goes out to play.");
@@ -132,6 +159,7 @@ void relative(int id) {
     print(title, id, action);
 
     // eat dinner
+    wait(carve_turkey);
     stringCopy(action, "is eating.");
     print(title, id, action);
     delay(2);
@@ -140,7 +168,6 @@ void relative(int id) {
     stringCopy(action, "is done eating.");
     print(title, id, action);
     wait(excused);      // wait to be excused
-    signal(excused);    // don't block others
 
     // go home
     stringCopy(action, "goes home.");
@@ -153,7 +180,7 @@ main() {
 
     // queue controls
     initialsem(hayride_queue, 1);
-    initialsem(excuse_queue, 0);
+    initialsem(excused, 0);
 
     cobegin {
         // spawn parents
