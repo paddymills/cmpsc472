@@ -1,8 +1,11 @@
 
+#include <queue.cm>
+
 semaphore seated;           // number of people seated (excludes Father)
 semaphore carve_turkey;     // turkey is carved
 semaphore hayride_queue;    // mutex for hayride queue
 semaphore excused;          // to be excused
+semaphore printMutex;	    // sem for controlling print access for the father giving hayrides
 
 int num_seated = 0;
 const int ACTION_LEN = 64;          // length of action string
@@ -16,6 +19,7 @@ atomic void print(string title, int id, string str) {
     
     cout << str << endl;
 }
+
 
 void delay(int duration) {
     // TODO: simulate delay
@@ -34,24 +38,28 @@ void signal_seated() {
 
 void mother() {
     // init vars
-    string[6] title;
+    string[12] title;
     string[ACTION_LEN] action;
     int id = 0;
 
     // set title
-    stringCopy(title, "Mother");
+    stringCopy(title, "      Mother");
 
     // make meal
     stringCopy(action, "is preparing the meal.");
     print(title, id, action);
     delay(10);
 
-    // put foot in oven
+    // put food in oven
     stringCopy(action, "is putting food in the oven.");
     print(title, id, action);
     delay(1);
     
+    
     // go on hayride (with child 8)
+    stringCopy(action, "is waiting for a hayride.");
+    print(title, id, action);
+    enqueue(which_proc, 0, 0);
 
     // enter house and wash up
     stringCopy(action, "is washing up.");
@@ -84,7 +92,30 @@ void mother() {
 
 void father() {
     int i;
-
+    string[15] title;
+    string[ACTION_LEN] action;
+    int id = 0;
+    
+    //Print that father is hooking up the horses
+    stringCopy(action, "is hooking up the horses");
+    stringCopy(title, "         Father");
+    print(title, id, action);
+    
+    delay(10);
+    
+    //print that the horses are hooked up and ready for hayrides
+    stringCopy(action, "is done hooking up the horses");
+    stringCopy(title, "         Father");
+    print(title, id, action);
+    
+    delay(10);
+    
+    //give hayrides
+    
+    //wait untill enough people come for a hayride
+    //give hayride
+    //signal that more people can ride
+    
     while (1) {
         wait(seated);
             if (num_seated == NUM_OTHERS) {
@@ -95,28 +126,49 @@ void father() {
     }
 
     // signal turkeyis carved
+    //print that father is carving the turkey
+    stringCopy(action, "is carving the turkey");
+    stringCopy(title, "         Father");
+    print(title, id, action); 
+
+    delay(10);
+
     for (i = 0; i < NUM_OTHERS; i++)
         signal(carve_turkey);
 
     // signal everyone is excused
     for (i = 0; i < NUM_OTHERS; i++)
         signal(excused);
+        
+    stringCopy(action, "excusses everyone from the table");
+    stringCopy(title, "         Father");
+    print(title, id, action); 
+        
+    //print that father is asleep watching football
+    stringCopy(action, "is asleep and watching football");
+    stringCopy(title, "         Father");
+    print(title, id, action); 
 }
 
 void child(int id) {
     // init vars
-    string[5] title;
+    string[8] title;
     string[ACTION_LEN] action;
 
     // set title
-    stringCopy(title, "Child");
+    stringCopy(title, "   Child");
 
     // rake leaves
     stringCopy(action, "is raking leaves.");
     print(title, id, action);
     delay(2);
 
+    enqueue(which_proc, 0, 0);
+    
     // go on hayride
+    stringCopy(action, "is waiting for a hayride.");
+    print(title, id, action);
+    enqueue(which_proc, 2, id);
 
     // clean up and sit at table
     signal_seated();
@@ -150,8 +202,11 @@ void relative(int id) {
     stringCopy(action, "arrives.");
     print(title, id, action);
 
-    // go on hayride
 
+    // go on hayride
+    stringCopy(action, "is waiting for a hayride.");
+    print(title, id, action);
+    enqueue(which_proc, 1, id);
 
     // clean up and sit at table
     signal_seated();
@@ -181,6 +236,8 @@ main() {
     // queue controls
     initialsem(hayride_queue, 1);
     initialsem(excused, 0);
+    
+    initialsem(printMutex, 1);
 
     cobegin {
         // spawn parents

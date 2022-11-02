@@ -9,6 +9,10 @@ int hayride_pids[3];
 binarysem acc = 1;
 
 void enqueue(int proc_id, int type, int proc_num) {
+    // types
+    //  mother = 0
+    //  adult = 1
+    //  child = 2
     wait(acc);
         procs[end] = proc_id;
         data[end] = type;
