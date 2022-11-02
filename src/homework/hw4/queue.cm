@@ -2,34 +2,47 @@
 int end = 0;
 int procs[16];
 int data[16];
+int ids[16];
+
+int hayride_pids[3];
 
 binarysem acc = 1;
 
-void enqueue(int proc_id, int num) {
+void enqueue(int proc_id, int type, int proc_num) {
     wait(acc);
         procs[end] = proc_id;
-        data[end] = num;
+        data[end] = type;
+        ids[end] = proc_num;
         end++;
     signal(acc);
 }
 
-int dequeue(int index) {
+void dequeue(int index, int& pid, int& name) {
     int i;
     int result;
 
     wait(acc);
-        result = procs[index];
+        pid = procs[index];
+        name = ids[index];
+
         for (i = index; i < end; i++) {
             procs[i] = procs[i+1];
             data[i] = data[i+1];
         }
 
+        // zero out item removed
         procs[end] = 0;
         data[end] = 0;
         end--;
     signal(acc);
+}
 
-    return result;
+void build_ride(string output) {
+    int i;
+    for (i=0; i<3; i++) {
+        stringConcat(output, "Child 1,");
+        hayride_pids[i] = procs[i];
+    }
 }
 
 int show(int index) {
