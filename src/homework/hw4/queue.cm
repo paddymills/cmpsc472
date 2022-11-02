@@ -42,10 +42,50 @@ void dequeue(int index, int& pid, int& name) {
 }
 
 void build_ride(string output) {
-    int i;
-    for (i=0; i<3; i++) {
-        stringConcat(output, "Child 1,");
-        hayride_pids[i] = procs[i];
+    int num_on_hayride = 0;
+    int num_adults = 0;
+    int num_children = 0
+
+    int i = 0;
+    int add_to_hayride;
+
+    while (num_on_hayride < 3) {
+        add_to_hayride = 0
+
+        // mother
+        if (data[i] == 0) {
+            // must ride with child
+        }
+
+        // adult
+        else if (data[i] == 1) {
+            if (num_adults == 1 && num_children == 0) {
+                continue;
+            }
+        }
+
+        // child
+        else {
+            // child 8
+            if (ids[i] == 8) {
+                // must ride with mother
+            }
+        }
+
+        // stringConcat(output, "Child 1");
+
+        // add to hayride
+        if (add_to_hayride == 1) {
+            hayride_pids[num_on_hayride] = procs[i];
+            num_on_hayride++;
+            dequeue(i)
+        }
+        else {
+            i++;
+        }
+
+        if (num_adults == 2 || (num_adults == 1 && num_children == 2))
+            break;
     }
 }
 
@@ -57,4 +97,14 @@ int show(int index) {
     signal(acc);
 
     return result;
+}
+
+void int_repr(int num, string output) {
+    if (num == 1) {
+        stringConcat(output, "1");
+    }
+    else if (num == 2) {
+        stringConcat(output, "2");
+    }
+    // TODO: finish
 }
