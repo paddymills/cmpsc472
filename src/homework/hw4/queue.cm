@@ -8,6 +8,20 @@ int hayride_pids[3];
 
 binarysem acc = 1;
 
+//method to find if a specific person is in the queue
+int child8Spot(int id_to_find){
+    int i = 0;
+   while(i < procs.length){
+        if(procs[i] == id_to_find){
+            return 1;  // 1 in this case == true
+        }
+        else{
+            i++;
+        }
+   }
+}
+
+
 void enqueue(int proc_id, int type, int proc_num) {
     // types
     //  mother = 0
