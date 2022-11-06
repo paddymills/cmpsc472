@@ -5,15 +5,15 @@
 # Patrick 11/5 - Idea for how to implement the hayride (pseudo code)
 ```
 for person in hayride_queue {
-    if isAdult() {
-        if isMother() {
-            if numChildren < 2 && numAdults == 0 && child8IsInQueue() {
-                hayride.append(mother);
-                hayride.append(child8);
-            }
+    if isMother() || isChild8 {
+        if numChildren < 2 && numAdults == 0 {
+            hayride.append(mother);
+            hayride.append(child8);
         }
-
-        else if numAdults == 0 && numChildren < 3 {
+    }
+    
+    if isAdult() {
+        if numAdults == 0 && numChildren < 3 {
             hayride.append(person)
         }
         
@@ -23,14 +23,7 @@ for person in hayride_queue {
     }
 
     else { //child
-        if isChild8() {
-            if numChildren < 2 && numAdults == 0 && motherIsInQueue() {
-                hayride.append(mother);
-                hayride.append(child8);
-            }
-        }
-
-        else if numAdults == 0 && numChildren < 3 {
+        if numAdults == 0 && numChildren < 3 {
             hayride.append(person)
         }
 
@@ -49,3 +42,11 @@ for person in hayride_queue {
 
 #added a function that will loop through the procs and see if a given id is in the queueu waiting for a hayride
 
+
+# Patrick - I think we need to handle when a full hayride is not picked, but a full hayride can be picked from a different set in the queue
+
+sorry, did not mean to do so much of the ride, but I had the queue so ripped apart I felt bad leaving it for you to figure out.
+
+try implementing the hayride from the fathers end.
+you will want to call build_ride(str) where str is a string that receives the output of who is on the ride.
+you will then need to access hayride_pids and loop through it to wake up the processes by calling revive(pid). note that a pid of 0 is not a pid. this is the case of 2 adults on a ride (the third pid will be 0 meaning no one.)

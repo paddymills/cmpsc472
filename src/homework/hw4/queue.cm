@@ -1,124 +1,199 @@
 
 int end = 0;
 int procs[16];
-int data[16];
-int ids[16];
+string[16] names[16];
 
 int hayride_pids[3];
 
-binarysem acc = 1;
+binarysem access = 1;
 
 //method to find if a specific person is in the queue
+int find_other(int start, string to_find) {
+    int i;
+    for (i=start; i<end; i++) {
+        if ( stringCompare(names[i], to_find) == 0 )
+            return i;
+    }
+
+    return -1;
+}
+
 int child8Spot(int id_to_find){
     int i = 0;
-   while(i < procs.length){
+    while(i < end){
         if(procs[i] == id_to_find){
             return 1;  // 1 in this case == true
         }
         else{
             i++;
         }
-   }
+    }
 }
 
-
-void enqueue(int proc_id, int type, int proc_num) {
-    // types
-    //  mother = 0
-    //  adult = 1
-    //  child = 2
-    wait(acc);
+void enqueue(int proc_id, string name) {
+    wait(access);
         procs[end] = proc_id;
-        data[end] = type;
-        ids[end] = proc_num;
+        stringCopy(names[end], name);
         end++;
-    signal(acc);
+    signal(access);
 }
 
-void dequeue(int index, int& pid, int& name) {
+void dequeue(int index, int& pid) {
     int i;
     int result;
 
-    wait(acc);
+    wait(access);
         pid = procs[index];
-        name = ids[index];
 
-        for (i = index; i < end; i++) {
-            procs[i] = procs[i+1];
-            data[i] = data[i+1];
+        // delete item
+        procs[index] = 0;
+        stringCopy(names[index], "");
+
+        clean_queue();
+    signal(access);
+}
+
+void dequeue_no_clean(int index, int& pi) {
+    // dequeue item without consolidating
+    // useful for when removing multiple items.
+    int i;
+    int result;
+
+    wait(access);
+        pid = procs[index];
+
+        // delete item
+        procs[index] = 0;
+        stringCopy(names[index], "");
+    signal(access);
+}
+
+void clean_queue() {
+    // for cleaning queue to have no gaps
+    int i;
+
+    wait(access);
+        for (i = 0; i < 16; i++) {
+            if ( procs[i] == 0 ) {
+                // copy next item to current
+                procs[i] = procs[i+1];
+                stringCopy(names[i], names[i+1]);
+
+                // delete next item
+                procs[i+1] = 0;
+                stringCopy(names[i+1], "");
+            }
         }
 
-        // zero out item removed
-        procs[end] = 0;
-        data[end] = 0;
-        end--;
-    signal(acc);
+        // calculate new end
+        for (i = 0; i < 16; i++) {
+            if ( procs[i] == 0 ) {
+                end = i;
+                break;
+            }
+        }
+    signal(access);
 }
 
 void build_ride(string output) {
+    int hayride_index[3];    //array for calculating hayride (store array indexes)
     int num_on_hayride = 0;
     int num_adults = 0;
     int num_children = 0
 
-    int i = 0;
-    int add_to_hayride;
+    string[16] mother, relative, child8;
+    string[16] type, tempName;
+    int id;
 
-    while (num_on_hayride < 3) {
-        add_to_hayride = 0
+    int i, mother_index, child8_index;
 
-        // mother
-        if (data[i] == 0) {
-            // must ride with child
+    for (i=0; i<3; i++) {
+        hayride_pids[i] = 0;
+    }
+
+    // set strings for comparing
+    stringCopy(mother, "Mother");
+    stringCopy(relative, "Relative");
+    stringCopy(child8, "Child 8");
+    
+    for (i = 0; i < end; i++) {
+        // have to copy name to tempName because sscanf cannot handle arrays
+        stringCopy(tempName, names[i]);
+        sscanf(tempName, "%s %d", type, id);
+
+        // mother or child 8
+        if ( stringCompare(type, mother) == 0 || stringCompare(names[i], child8) == 0 ) {
+            mother_index = find_other(i, mother);
+            child8_index = find_other(i, child8);
+            if ( mother_index > -1 && child8_index > -1 ) {
+                // mother and child ride together
+                if ( num_children < 2 && num_adults == 0) {
+                    hayride_index[num_on_hayride] = mother_index;
+                    hayride_index[num_on_hayride+1] = child8_index;
+                    num_on_hayride += 2;
+                    num_adults++;
+                    num_children++;
+                }
+            }
+            // else: mother or child8 not in queue, skip for now
         }
 
         // adult
-        else if (data[i] == 1) {
-            if (num_adults == 1 && num_children == 0) {
-                continue;
+        else if ( stringCompare(type, relative) == 0 ) {
+            if ( num_adults == 0 && num_children < 3 ) {
+                hayride_index[num_on_hayride] = i;
+                num_on_hayride++;
+                num_adults++;
+            }
+            else if ( num_adults < 2 && num_children == 0 ) {
+                hayride_index[num_on_hayride] = i;
+                num_on_hayride++;
+                num_adults++;
             }
         }
 
         // child
         else {
-            // child 8
-            if (ids[i] == 8) {
-                // must ride with mother
+            if ( num_adults == 0 && num_children < 3 ) {
+                hayride_index[num_on_hayride] = i;
+                num_on_hayride++;
+                num_children++;
             }
-        }
-
-        // stringConcat(output, "Child 1");
-
-        // add to hayride
-        if (add_to_hayride == 1) {
-            hayride_pids[num_on_hayride] = procs[i];
-            num_on_hayride++;
-            dequeue(i)
-        }
-        else {
-            i++;
+            else if ( num_adults == 1 && num_children < 2 ) {
+                hayride_index[num_on_hayride] = i;
+                num_on_hayride++;
+                num_children++;
+            }
         }
 
         if (num_adults == 2 || (num_adults == 1 && num_children == 2))
             break;
     }
+
+    if (num_adults == 2 || (num_adults == 1 && num_children == 2)) {
+        // collect PIDs
+        for (i=0; i<num_on_hayride; i++) {
+            hayride_pids[i] = procs[hayride_index[i]];
+        }
+
+        // calc output
+        stringConcat(output, names[hayride_index[0]]);
+        if ( num_on_hayride == 3 ) {
+            stringConcat(output, ", ");
+            stringConcat(output, names[hayride_index[1]);
+        }
+        stringConcat(output, " and ");
+        stringConcat(output, names[hayride_index[num_on_hayride-1]]);        
+    }
+    // TODO: else, not a full hayride picked
 }
 
 int show(int index) {
     int result;
 
-    wait(acc);
+    wait(access);
         result = data[index];
-    signal(acc);
+    signal(access);
 
     return result;
-}
-
-void int_repr(int num, string output) {
-    if (num == 1) {
-        stringConcat(output, "1");
-    }
-    else if (num == 2) {
-        stringConcat(output, "2");
-    }
-    // TODO: finish
 }

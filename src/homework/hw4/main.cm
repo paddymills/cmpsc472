@@ -53,7 +53,7 @@ void mother() {
     // go on hayride (with child 8)
     sprintf(action, "%12s is waiting for a hayride.", title);
     print(action);
-    enqueue(which_proc, 0, 0);
+    enqueue(which_proc, title);
 
     // enter house and wash up
     sprintf(action, "%12s is washing up.", title);
@@ -158,7 +158,7 @@ void child(int id) {
     // go on hayride
     stringCopy(action, "%10s is waiting for a hayride.", title);
     print(action);
-    enqueue(which_proc, 2, id);
+    enqueue(which_proc, title);
 
     // clean up and sit at table
     signal_seated();
@@ -196,7 +196,7 @@ void relative(int id) {
     // go on hayride
     stringCopy(action, "%10s is waiting for a hayride.", title);
     print(action);
-    enqueue(which_proc, 1, id);
+    enqueue(which_proc, title);
 
     // clean up and sit at table
     signal_seated();

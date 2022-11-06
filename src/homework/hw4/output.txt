@@ -1,0 +1,34 @@
+   Child 1 is raking leaves.
+      Mother is making the meal.
+   Child 2 is raking leaves.
+Relative 1 arrives.
+Relative 2 arrives.
+... (assume all relatives arrive and all children are raking leaves)
+   Child 1 is waiting for hayride.
+Relative 1 is waiting for hayride.
+Relative 3 is waiting for hayride.
+   Child 3 is waiting for hayride.
+         Father is ready to give hayrides.
+         Father gives hayride to Child 1, Child 3 and Relative 1.
+   Child 8 is waiting for hayride.
+   Child 2 is waiting for hayride.
+   Child 1 is sitting at table. 
+      Mother is waiting for hayride.
+         Father gives hayride to Child 2, Child 8 and Mother.
+... (assume all have had hayrides and are seated at table)
+         Father carves turkey.
+   Child 1 is eating. 
+   Child 3 is eating. 
+Relative 1 is eating. 
+      Mother is eating. 
+... (assume they are all eating) 
+   Child 1 is done eating. 
+Relative 4 is done eating. 
+... (assume they are all done eating) 
+         Father excuses everyone from table.
+Relative 2 goes home.
+   Child 7 goes out to play.
+       Mother goes to read her book. 
+         Father goes to watch football.
+   Child 1 goes out to play.
+...
