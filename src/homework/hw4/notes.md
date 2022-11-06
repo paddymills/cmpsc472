@@ -50,3 +50,7 @@ sorry, did not mean to do so much of the ride, but I had the queue so ripped apa
 try implementing the hayride from the fathers end.
 you will want to call build_ride(str) where str is a string that receives the output of who is on the ride.
 you will then need to access hayride_pids and loop through it to wake up the processes by calling revive(pid). note that a pid of 0 is not a pid. this is the case of 2 adults on a ride (the third pid will be 0 meaning no one.)
+
+
+Having trouble figuring out how to get str in the Father process
+
