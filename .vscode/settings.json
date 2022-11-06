@@ -1,3 +1,12 @@
 {
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "*.n": "gcode",
+        "*.ready": "tsv",
+        "*.cm": "cpp",
+        "*.reading": "tsv",
+        "vector": "cpp",
+        "xutility": "cpp",
+        "xmemory": "cpp"
+    }
 }

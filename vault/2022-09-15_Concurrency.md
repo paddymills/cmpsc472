@@ -162,7 +162,7 @@ flag[me] = false;
 ```c
 void wait(s) {
 	while (s<=0);
-	s += 1;
+	s -= 1;
 }
 
 void signal(s) {
