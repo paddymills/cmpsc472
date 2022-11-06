@@ -11,12 +11,7 @@ int num_seated = 0;
 const int ACTION_LEN = 64;          // length of action string
 const int NUM_OTHERS = 15;   // number of people not father (1 mother + 8 children + 6 relatives)
 
-atomic void print(string title, int id, string str) {
-    cout << title << " ";
-
-    if (id > 0)
-        cout << id << " ";
-    
+atomic void print(string str) {
     cout << str << endl;
 }
 
@@ -38,56 +33,54 @@ void signal_seated() {
 
 void mother() {
     // init vars
-    string[12] title;
+    string[16] title;
     string[ACTION_LEN] action;
-    int id = 0;
 
     // set title
-    stringCopy(title, "      Mother");
+    stringCopy(title, "Mother");
 
     // make meal
-    stringCopy(action, "is preparing the meal.");
-    print(title, id, action);
+    sprintf(action, "%12s is preparing the meal.", title);
+    print(action);
     delay(10);
 
     // put food in oven
-    stringCopy(action, "is putting food in the oven.");
-    print(title, id, action);
+    sprintf(action, "%12s is putting food in the oven.", title);
+    print(action);
     delay(1);
     
     
     // go on hayride (with child 8)
-    stringCopy(action, "is waiting for a hayride.");
-    print(title, id, action);
+    sprintf(action, "%12s is waiting for a hayride.", title);
+    print(action);
     enqueue(which_proc, 0, 0);
 
     // enter house and wash up
-    stringCopy(action, "is washing up.");
-    print(title, id, action);
+    sprintf(action, "%12s is washing up.", title);
+    print(action);
     
     // put meal on table
-    stringCopy(action, "is putting the meal on the table.");
-    print(title, id, action);
+    sprintf(action, "%12s is putting the meal on the table.", title);
+    print(action);
 
     // sit at table
     signal_seated();
-    stringCopy(action, "is sitting at table.");
-    print(title, id, action);
+    sprintf(action, "%12s is sitting at table.", title);
+    print(action);
 
     // eat dinner
     wait(carve_turkey);
-    stringCopy(action, "is eating.");
-    print(title, id, action);
+    sprintf(action, "%12s is eating.", title);
+    print(action);
 
     // done eating -> be excused
-    stringCopy(action, "is done eating.");
-    print(title, id, action);
+    sprintf(action, "%12s is done eating.", title);
+    print(action);
     wait(excused);      // wait to be excused
 
     // read favorite book
-    stringCopy(action, "goes to read her book.");
-    print(title, id, action);
-
+    sprintf(action, "%12s goes to read her book.", title);
+    print(action);
 }
 
 void father() {
@@ -96,17 +89,18 @@ void father() {
     string[ACTION_LEN] action;
     int id = 0;
     
+    // set title
+    stringCopy(title, "Father");
+
     //Print that father is hooking up the horses
-    stringCopy(action, "is hooking up the horses");
-    stringCopy(title, "         Father");
-    print(title, id, action);
+    stringCopy(action, "%15s is hooking up the horses", title);
+    print(action);
     
     delay(10);
     
     //print that the horses are hooked up and ready for hayrides
-    stringCopy(action, "is done hooking up the horses");
-    stringCopy(title, "         Father");
-    print(title, id, action);
+    stringCopy(action, "%15s is done hooking up the horses", title);
+    print(action);
     
     delay(10);
     
@@ -127,9 +121,8 @@ void father() {
 
     // signal turkeyis carved
     //print that father is carving the turkey
-    stringCopy(action, "is carving the turkey");
-    stringCopy(title, "         Father");
-    print(title, id, action); 
+    stringCopy(action, "%15s is carving the turkey", title);
+    print(action); 
 
     delay(10);
 
@@ -140,14 +133,12 @@ void father() {
     for (i = 0; i < NUM_OTHERS; i++)
         signal(excused);
         
-    stringCopy(action, "excusses everyone from the table");
-    stringCopy(title, "         Father");
-    print(title, id, action); 
+    stringCopy(action, "%15s excusses everyone from the table", title);
+    print(action); 
         
     //print that father is asleep watching football
-    stringCopy(action, "is asleep and watching football");
-    stringCopy(title, "         Father");
-    print(title, id, action); 
+    stringCopy(action, "%15s is asleep and watching football", title);
+    print(action); 
 }
 
 void child(int id) {
@@ -156,38 +147,37 @@ void child(int id) {
     string[ACTION_LEN] action;
 
     // set title
-    stringCopy(title, "   Child");
+    stringCopy(title, "Child");
+    sprintf(title, "%s %d", title, id);
 
     // rake leaves
-    stringCopy(action, "is raking leaves.");
-    print(title, id, action);
+    stringCopy(action, "%10s is raking leaves.", title);
+    print(action);
     delay(2);
-
-    enqueue(which_proc, 0, 0);
     
     // go on hayride
-    stringCopy(action, "is waiting for a hayride.");
-    print(title, id, action);
+    stringCopy(action, "%10s is waiting for a hayride.", title);
+    print(action);
     enqueue(which_proc, 2, id);
 
     // clean up and sit at table
     signal_seated();
-    stringCopy(action, "is sitting at table.");
-    print(title, id, action);
+    stringCopy(action, "%10s is sitting at table.", title);
+    print(action);
 
     // eat dinner
     wait(carve_turkey);
-    stringCopy(action, "is eating.");
-    print(title, id, action);
+    stringCopy(action, "%10s is eating.", title);
+    print(action);
 
     // done eating -> be excused
-    stringCopy(action, "is done eating.");
-    print(title, id, action);
+    stringCopy(action, "%10s is done eating.", title);
+    print(action);
     wait(excused);      // wait to be excused
 
     // go out and play
-    stringCopy(action, "goes out to play.");
-    print(title, id, action);
+    stringCopy(action, "%10s goes out to play.", title);
+    print(action);
 }
 
 void relative(int id) {
@@ -197,36 +187,36 @@ void relative(int id) {
 
     // set title
     stringCopy(title, "Relative");
+    sprintf(title, "%s %d", title, id);
 
     // arrive at farm
-    stringCopy(action, "arrives.");
-    print(title, id, action);
-
+    stringCopy(action, "%10s arrives.", title);
+    print(action);
 
     // go on hayride
-    stringCopy(action, "is waiting for a hayride.");
-    print(title, id, action);
+    stringCopy(action, "%10s is waiting for a hayride.", title);
+    print(action);
     enqueue(which_proc, 1, id);
 
     // clean up and sit at table
     signal_seated();
-    stringCopy(action, "is sitting at table.");
-    print(title, id, action);
+    stringCopy(action, "%10s is sitting at table.", title);
+    print(action);
 
     // eat dinner
     wait(carve_turkey);
-    stringCopy(action, "is eating.");
-    print(title, id, action);
+    stringCopy(action, "%10s is eating.", title);
+    print(action);
     delay(2);
 
     // done eating -> be excused
-    stringCopy(action, "is done eating.");
-    print(title, id, action);
+    stringCopy(action, "%10s is done eating.", title);
+    print(action);
     wait(excused);      // wait to be excused
 
     // go home
-    stringCopy(action, "goes home.");
-    print(title, id, action);
+    stringCopy(action, "%10s goes home.", title);
+    print(action);
 }
 
 main() {
