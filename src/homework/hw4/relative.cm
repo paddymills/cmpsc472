@@ -1,0 +1,26 @@
+
+string[ACTION_LEN] rel_temp_str;
+
+void arrive(string name) {
+    sprintf(rel_temp_str, "%10s has arrived.", name);
+    print(rel_temp_str);
+}
+
+void go_home(string name) {
+    sprintf(rel_temp_str, "%10s goes home", name);
+    print(rel_temp_str);
+}
+
+void relative(int id) {
+    // set title
+    string[NAME_LEN] title;
+    sprintf(title, "Relative %d", id);
+
+    // today's activities
+    arrive(title);              // arrive at farm
+    hayride(title);             // go on hayride
+    sit_at_table(title);        // clean up and sit at table
+    eat_dinner(title);          // eat dinner (after turkey is carved)
+    is_finished_eating(title);  // done eating -> be excused
+    go_home(title);             // go home
+}

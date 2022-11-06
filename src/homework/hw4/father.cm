@@ -1,0 +1,82 @@
+
+string[128] father_temp_str;
+string[NAME_LEN] father_title;
+
+void prepare_hayride() {
+    //Print that father is hooking up the horses
+    sprintf(father_temp_str, "%15s is hooking up the horses", father_title);
+    print(father_temp_str);
+    delay(10);
+    
+    //print that the horses are hooked up and ready for hayrides
+    sprintf(father_temp_str, "%15s is done hooking up the horses.", father_title);
+    print(father_temp_str);
+}
+
+void give_hayrides() {
+    int i;  // for iteration
+    int hayrides_given_to = 0;  // num of people who went on hayrides
+
+    while (hayrides_given_to < NUM_OTHERS) {
+        // build ride (in queue.cm)
+        build_hayride(father_temp_str);
+
+        sprintf(father_temp_str, "%15s is giving a hayride to %s.", father_title, father_temp_str);
+        print(father_temp_str);
+
+        // revive people (processes) on ride
+        for (i=0; i<3; i++) {
+            // 0 is if no person is in this slot (less than 3 on ride)
+            if (hayride_pids[i] == 0)
+                continue;
+
+            hayrides_given_to++;
+            revive(hayride_pids[i]);
+        }
+    }
+}
+
+void carve_turkey() {
+    int i;  // for iteration
+
+    // wait for everyone to be seated
+    wait(turkey_can_be_carved);
+    
+    sprintf(father_temp_str, "%15s is carving the turkey.", father_title);
+    print(father_temp_str); 
+
+    delay(10);
+
+    // signal turkey is carved
+    //  do this for every non-father person as they consume turkey_is_carved
+    for (i = 0; i < NUM_OTHERS; i++)
+        signal(turkey_is_carved);
+}
+
+void excuse_everyone_from_table() {
+    int i;  // for iteration
+
+    sprintf(father_temp_str, "%15s excuses everyone from the table", father_title);
+    print(father_temp_str); 
+
+    // as with turkey_is_carved, this is a consumable semaphore
+    //   so we need to signal for each non-father person
+    for (i = 0; i < NUM_OTHERS; i++)
+        signal(excused);
+}
+
+void father_gets_to_relax() {
+    sprintf(father_temp_str, "%15s is asleep and watching football", father_title);
+    print(father_temp_str); 
+}
+
+void father() {    
+    // set title
+    stringCopy(father_title, "Father");
+    
+    prepare_hayride();              // prepare horses and wagon
+    give_hayrides();                // give hayrides
+    carve_turkey();                 // father carves turkey
+    excuse_everyone_from_table();   // everyone is excused by father
+    father_gets_to_relax();         // end to a hard days work
+}

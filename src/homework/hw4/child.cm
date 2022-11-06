@@ -1,0 +1,29 @@
+
+string[ACTION_LEN] child_temp_str;
+
+void rake_leaves(string name) {
+    sprintf(child_temp_str, "%10s is raking leaves.", name);
+    print(child_temp_str);
+
+    // raking leaves takes time
+    delay(5);
+}
+
+void go_out_and_play(string name) {
+    sprintf(child_temp_str, "%10s goes out to play.", name);
+    print(child_temp_str);
+}
+
+void child(int id) {
+    // set title
+    string[NAME_LEN] title;
+    sprintf(title, "Child %d", id);
+
+    // today's activities
+    rake_leaves(title);         // rake leaves (must be a big farm)
+    hayride(title);             // go on hayride
+    sit_at_table(title);        // clean up and sit at table
+    eat_dinner(title);          // eat dinner (after turkey is carved)
+    is_finished_eating(title);  // done eating -> be excused
+    go_out_and_play(title);     // go out and play
+}

@@ -1,0 +1,55 @@
+
+// ********************************************
+// * common action functions for thanksgiving *
+// ********************************************
+
+string[ACTION_LEN] actions_temp_str;
+string[NAME_LEN] temp_name;
+
+void hayride(string name) {
+    sprintf(actions_temp_str, "%10s is waiting for a hayride.", name);
+    print(actions_temp_str);
+
+    // add to hayride waiting queue
+    stringCopy(temp_name, name);
+    enqueue(temp_name);
+    
+    // suspend process
+    //  process will be revive'd by father
+    suspend();
+
+    // get back to house and clean up
+    delay(2);
+}
+
+void sit_at_table(string name) {
+    sprintf(actions_temp_str, "%10s has cleaned up and is sitting at table.", name);
+    print(actions_temp_str);
+
+    wait(seated);
+        num_seated = num_seated + 1;
+
+        if (num_seated == NUM_OTHERS) {
+            signal(turkey_can_be_carved);
+        }
+    signal(seated);
+}
+
+void eat_dinner(string name) {
+    // wait for turkey to be carved
+    wait(turkey_is_carved);
+
+    sprintf(actions_temp_str, "%10s is eating.", name);
+    print(actions_temp_str);
+
+    // eating takes time
+    delay(2);
+}
+
+void is_finished_eating(string name) {
+    sprintf(actions_temp_str, "%10s is done eating.", name);
+    print(actions_temp_str);
+    
+    // wait to be excused
+    wait(excused);
+}

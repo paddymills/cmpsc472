@@ -1,0 +1,44 @@
+
+string[ACTION_LEN] mother_temp_str;
+string[NAME_LEN] mother_title;
+
+void prepare_meal() {
+    // make meal
+    sprintf(mother_temp_str, "%12s is preparing the meal.", mother_title);
+    print(mother_temp_str);
+    delay(10);
+
+    // put food in oven
+    sprintf(mother_temp_str, "%12s is putting food in the oven.", mother_title);
+    print(mother_temp_str);
+    delay(1);
+}
+void set_meal() {
+    // enter house and wash up
+    sprintf(mother_temp_str, "%12s is washing up.", mother_title);
+    print(mother_temp_str);
+    delay(1);
+    
+    // put meal on table
+    sprintf(mother_temp_str, "%12s is putting the meal on the table.", mother_title);
+    print(mother_temp_str);
+    delay(1);
+}
+void mother_gets_to_relax() {
+    // read favorite book
+    sprintf(mother_temp_str, "%12s goes to read her book.", mother_title);
+    print(mother_temp_str);
+}
+
+void mother() {
+    // set title
+    stringCopy(mother_title, "Mother");
+
+    prepare_meal();                     // mother is the best a cooking
+    hayride(mother_title);              // go on hayride
+    set_meal();                         // someone has to put food on the table
+    sit_at_table(mother_title);         // clean up and sit at table
+    eat_dinner(mother_title);           // eat dinner (after turkey is carved)
+    is_finished_eating(mother_title);   // done eating -> be excused
+    mother_gets_to_relax();                            // well earned mother_gets_to_relaxation
+}
