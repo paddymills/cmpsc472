@@ -13,7 +13,12 @@ const int ACTION_LEN = 64;      // length of action string
 const int NUM_OTHERS = 15;      // number of people not father (1 mother + 8 children + 6 relatives)
 const int NAME_LEN = 16;        // length of all name strings
 
+const int MOTHER_TYPE = 1;
+const int RELATIVE_TYPE = 2;
+const int CHILD_TYPE = 3;
+
 int hayride_pids[3];            // because baci cannot take a array pointer as an argument
+int hayride_size;
 
 void init_thanksgiving() {
     // initialize semaphores

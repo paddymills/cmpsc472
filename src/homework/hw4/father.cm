@@ -1,5 +1,5 @@
 
-string[128] father_temp_str;
+string[256] father_temp_str;
 string[NAME_LEN] father_title;
 
 void prepare_hayride() {
@@ -19,7 +19,8 @@ void give_hayrides() {
 
     while (hayrides_given_to < NUM_OTHERS) {
         // build ride (in queue.cm)
-        build_hayride(father_temp_str);
+        build_hayride();
+        get_hayrider_names(father_temp_str);
 
         sprintf(father_temp_str, "%15s is giving a hayride to %s.", father_title, father_temp_str);
         print(father_temp_str);
@@ -27,11 +28,11 @@ void give_hayrides() {
         // revive people (processes) on ride
         for (i=0; i<3; i++) {
             // 0 is if no person is in this slot (less than 3 on ride)
-            if (hayride_pids[i] == 0)
-                continue;
-
-            hayrides_given_to++;
-            revive(hayride_pids[i]);
+            if (hayride_pids[i] > 0) {
+                hayrides_given_to++;
+                dequeue(hayride_pids[i]);
+                revive(hayride_pids[i]);
+            }
         }
     }
 }

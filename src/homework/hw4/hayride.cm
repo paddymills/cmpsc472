@@ -1,0 +1,149 @@
+
+void append_person_name(string str, int p_type, int p_id) {
+    if (p_type == MOTHER_TYPE) {
+        sprintf(str, "%s Mother", str);
+    }
+    else if (p_type == RELATIVE_TYPE) {
+        sprintf(str, "%s Relative %d", str, p_id);
+    }
+    else {
+        sprintf(str, "%s Child %d", str, p_id);
+    }
+}
+
+void build_hayride() {
+    int i, i_type, i_id;    // for iteration
+
+    int mother_index = -1;
+    int child8_index = -1;
+    int picked[3];    //array for calculating hayride (store array indexes)
+    int num_adults = 0;
+    int num_children = 0;
+    hayride_size = 0;
+
+    // lock queue
+    wait(access);
+    
+    // reset hayride
+    for (i=0; i<3; i++) {
+        hayride_pids[i] = 0;
+    }
+
+    for (i = 0; i < end; i++) {
+        i_type = types[i];
+        i_id = type_ids[i];
+
+        // mother or child 8
+        if ( i_type == MOTHER_TYPE || ( i_type == CHILD_TYPE && i_id == 8 ) ) {
+            // find mother and child8 indexes
+            for (i=0; i<end; i++) {
+                i_type = types[i];
+                i_id = type_ids[i];
+                
+                if ( i_type == MOTHER_TYPE )
+                    mother_index = i;
+                else if ( i_type == CHILD_TYPE && i_id == 8 )
+                    child8_index = i;
+            }
+
+            if ( mother_index > -1 && child8_index > -1 ) {
+                // mother and child ride together
+                if ( num_children < 2 && num_adults == 0) {
+                    // add mother
+                    picked[hayride_size] = mother_index;
+                    hayride_size++;
+                    num_adults++;
+
+                    // add child
+                    picked[hayride_size] = child8_index;
+                    hayride_size++;
+                    num_children++;
+                }
+            }
+            // else: mother or child8 not in queue, skip for now
+        }
+
+        // adult
+        else if ( i_type == RELATIVE_TYPE ) {
+            if ( num_adults == 0 && num_children < 3 ) {
+                picked[hayride_size] = i;
+                hayride_size++;
+                num_adults++;
+            }
+            else if ( num_adults < 2 && num_children == 0 ) {
+                picked[hayride_size] = i;
+                hayride_size++;
+                num_adults++;
+            }
+        }
+
+        // child
+        else {
+            if ( num_adults == 0 && num_children < 3 ) {
+                picked[hayride_size] = i;
+                hayride_size++;
+                num_children++;
+            }
+            else if ( num_adults == 1 && num_children < 2 ) {
+                picked[hayride_size] = i;
+                hayride_size++;
+                num_children++;
+            }
+        }
+
+        if (num_adults == 2 || (num_adults == 1 && num_children == 2) || num_children == 3)
+            break;
+    }
+
+    // collect PIDs
+    for (i=0; i<hayride_size; i++) {
+        hayride_pids[i] = procs[picked[i]];
+    }
+
+    // unlock queue
+    signal(access);
+
+    // TODO: not a full hayride picked
+}
+
+void get_hayrider_names(string output) {
+    string[NAME_LEN] person1, person2, person3;
+    int i;    // for iteration
+    
+    wait(access);
+
+    // person 1 name
+    i = get_queue_index(hayride_pids[0]);
+    append_person_name(person1, types[i], type_ids[i]);
+
+    // person 2 name
+    if ( hayride_size > 1 ) {
+        i = get_queue_index(hayride_pids[1]);
+        append_person_name(person2, types[i], type_ids[i]);
+    }
+
+    // person 3 name
+    if ( hayride_size == 3 ) {
+        i = get_queue_index(hayride_pids[2]);
+        append_person_name(person3, types[i], type_ids[i]);
+    }
+
+    // ******************* calc output *******************
+    stringCopy(output, person1);
+
+    // if 3 riders in hayride
+    if ( hayride_size == 3 ) {
+        stringConcat(output, ", ");
+        stringConcat(output, person2);
+        
+        stringConcat(output, " and ");
+        stringConcat(output, person3);
+    }
+    
+    else if ( hayride_size == 2 ) {
+        stringConcat(output, " and ");
+        stringConcat(output, person2);
+    }
+
+    signal(access);
+}

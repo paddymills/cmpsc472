@@ -21,6 +21,7 @@
 #include <utils.cm>     // global constants, variables and util functions
 #include <queue.cm>     // queue impl
 #include <actions.cm>   // actions used by multiple people types
+#include <hayride.cm>   // hayride builder
 
 #include <child.cm>
 #include <mother.cm>

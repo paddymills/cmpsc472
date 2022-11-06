@@ -17,10 +17,10 @@ void relative(int id) {
     sprintf(title, "Relative %d", id);
 
     // today's activities
-    arrive(title);              // arrive at farm
-    hayride(title);             // go on hayride
-    sit_at_table(title);        // clean up and sit at table
-    eat_dinner(title);          // eat dinner (after turkey is carved)
-    is_finished_eating(title);  // done eating -> be excused
-    go_home(title);             // go home
+    arrive(title);                      // arrive at farm
+    hayride(title, RELATIVE_TYPE, id);  // go on hayride
+    sit_at_table(title);                // clean up and sit at table
+    eat_dinner(title);                  // eat dinner (after turkey is carved)
+    is_finished_eating(title);          // done eating -> be excused
+    go_home(title);                     // go home
 }

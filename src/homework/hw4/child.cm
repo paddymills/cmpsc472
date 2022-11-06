@@ -20,10 +20,10 @@ void child(int id) {
     sprintf(title, "Child %d", id);
 
     // today's activities
-    rake_leaves(title);         // rake leaves (must be a big farm)
-    hayride(title);             // go on hayride
-    sit_at_table(title);        // clean up and sit at table
-    eat_dinner(title);          // eat dinner (after turkey is carved)
-    is_finished_eating(title);  // done eating -> be excused
-    go_out_and_play(title);     // go out and play
+    rake_leaves(title);             // rake leaves (must be a big farm)
+    hayride(title, CHILD_TYPE, id); // go on hayride
+    sit_at_table(title);            // clean up and sit at table
+    eat_dinner(title);              // eat dinner (after turkey is carved)
+    is_finished_eating(title);      // done eating -> be excused
+    go_out_and_play(title);         // go out and play
 }

@@ -34,11 +34,11 @@ void mother() {
     // set title
     stringCopy(mother_title, "Mother");
 
-    prepare_meal();                     // mother is the best a cooking
-    hayride(mother_title);              // go on hayride
-    set_meal();                         // someone has to put food on the table
-    sit_at_table(mother_title);         // clean up and sit at table
-    eat_dinner(mother_title);           // eat dinner (after turkey is carved)
-    is_finished_eating(mother_title);   // done eating -> be excused
-    mother_gets_to_relax();                            // well earned mother_gets_to_relaxation
+    prepare_meal();                         // mother is the best a cooking
+    hayride(mother_title, MOTHER_TYPE, 0);  // go on hayride
+    set_meal();                             // someone has to put food on the table
+    sit_at_table(mother_title);             // clean up and sit at table
+    eat_dinner(mother_title);               // eat dinner (after turkey is carved)
+    is_finished_eating(mother_title);       // done eating -> be excused
+    mother_gets_to_relax();                 // well earned mother_gets_to_relaxation
 }

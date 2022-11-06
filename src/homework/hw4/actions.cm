@@ -6,13 +6,12 @@
 string[ACTION_LEN] actions_temp_str;
 string[NAME_LEN] temp_name;
 
-void hayride(string name) {
+void hayride(string name, int type_num, int type_id) {
     sprintf(actions_temp_str, "%10s is waiting for a hayride.", name);
     print(actions_temp_str);
 
     // add to hayride waiting queue
-    stringCopy(temp_name, name);
-    enqueue(temp_name);
+    enqueue(type_num, type_id);
     
     // suspend process
     //  process will be revive'd by father
