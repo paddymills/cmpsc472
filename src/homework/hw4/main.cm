@@ -89,6 +89,8 @@ void father() {
     string[ACTION_LEN] action;
     int id = 0;
     
+    String onRide; 
+
     // set title
     stringCopy(title, "Father");
 
@@ -107,7 +109,22 @@ void father() {
     //give hayrides
     
     //wait untill enough people come for a hayride
+    stringCopy(onRide, "Father is giving rides to ");
+    int n = 0;
+    for(n = 0;n<3;n++){
+        stringConcat(onRide, hayride_queue[n]);
+    }
+
+    build_ride(onRide);
+
     //give hayride
+    int j = 0;
+    for(j = 0; j<3;j++){
+        if(hayride_queue[i] !=0){
+            revive(hayride_queue[i]);
+        }
+    }
+    
     //signal that more people can ride
     
     while (1) {
