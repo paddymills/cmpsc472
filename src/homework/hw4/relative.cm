@@ -1,14 +1,14 @@
 
-string[ACTION_LEN] rel_temp_str;
-
 void arrive(string name) {
-    sprintf(rel_temp_str, "%10s has arrived.", name);
-    print(rel_temp_str);
+    string[ACTION_LEN] temp_str;
+    sprintf(temp_str, "%10s has arrived.", name);
+    print(temp_str);
 }
 
 void go_home(string name) {
-    sprintf(rel_temp_str, "%10s goes home", name);
-    print(rel_temp_str);
+    string[ACTION_LEN] temp_str;
+    sprintf(temp_str, "%10s goes home", name);
+    print(temp_str);
 }
 
 void relative(int id) {

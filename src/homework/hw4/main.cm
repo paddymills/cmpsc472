@@ -1,223 +1,33 @@
 
-#include <queue.cm>
 
-semaphore seated;           // number of people seated (excludes Father)
-semaphore carve_turkey;     // turkey is carved
-semaphore hayride_queue;    // mutex for hayride queue
-semaphore excused;          // to be excused
-semaphore printMutex;	    // sem for controlling print access for the father giving hayrides
+// *****************************************
+// *  Homework 4: Thanksgiving simulation  *
+// *    CMPSC 472                          *
+// *        Patrick Miller                 *
+// *        Justin Neigh                 *
+// *****************************************
 
-int num_seated = 0;
-const int ACTION_LEN = 64;          // length of action string
-const int NUM_OTHERS = 15;   // number of people not father (1 mother + 8 children + 6 relatives)
+// *******************************************
+// *       main entrypoint for program       *
+// *******************************************
 
-atomic void print(string str) {
-    cout << str << endl;
-}
+// imports seem to need to be heirarchal
+//   and baci cannot figure out duplicate imports
+//
+// SO, all imports need to be in main and somehow
+//         the child imports can access them
 
+// order matters of these
+#include <utils.cm>     // global constants, variables and util functions
+#include <queue.cm>     // queue impl
+#include <actions.cm>   // actions used by multiple people types
+#include <hayride.cm>   // hayride builder
 
-void delay(int duration) {
-    // TODO: simulate delay
-    int i;
-    int delay;
-    
-    delay = random(duration * 10); 
-    for (i = 0; i < delay; i++);
-}
+#include <child.cm>
+#include <mother.cm>
+#include <father.cm>
+#include <relative.cm>
 
-void signal_seated() {
-    wait(seated);
-        num_seated = num_seated + 1;
-    signal(seated);
-}
-
-void mother() {
-    // init vars
-    string[16] title;
-    string[ACTION_LEN] action;
-
-    // set title
-    stringCopy(title, "Mother");
-
-    // make meal
-    sprintf(action, "%12s is preparing the meal.", title);
-    print(action);
-    delay(10);
-
-    // put food in oven
-    sprintf(action, "%12s is putting food in the oven.", title);
-    print(action);
-    delay(1);
-    
-    
-    // go on hayride (with child 8)
-    sprintf(action, "%12s is waiting for a hayride.", title);
-    print(action);
-    enqueue(which_proc, title);
-
-    // enter house and wash up
-    sprintf(action, "%12s is washing up.", title);
-    print(action);
-    
-    // put meal on table
-    sprintf(action, "%12s is putting the meal on the table.", title);
-    print(action);
-
-    // sit at table
-    signal_seated();
-    sprintf(action, "%12s is sitting at table.", title);
-    print(action);
-
-    // eat dinner
-    wait(carve_turkey);
-    sprintf(action, "%12s is eating.", title);
-    print(action);
-
-    // done eating -> be excused
-    sprintf(action, "%12s is done eating.", title);
-    print(action);
-    wait(excused);      // wait to be excused
-
-    // read favorite book
-    sprintf(action, "%12s goes to read her book.", title);
-    print(action);
-}
-
-void father() {
-    int i;
-    string[15] title;
-    string[ACTION_LEN] action;
-    int id = 0;
-    
-    // set title
-    stringCopy(title, "Father");
-
-    //Print that father is hooking up the horses
-    stringCopy(action, "%15s is hooking up the horses", title);
-    print(action);
-    
-    delay(10);
-    
-    //print that the horses are hooked up and ready for hayrides
-    stringCopy(action, "%15s is done hooking up the horses", title);
-    print(action);
-    
-    delay(10);
-    
-    //give hayrides
-    
-    //wait untill enough people come for a hayride
-    //give hayride
-    //signal that more people can ride
-    
-    while (1) {
-        wait(seated);
-            if (num_seated == NUM_OTHERS) {
-                signal(seated); // probably don't need this
-                break;
-            }
-        signal(seated);
-    }
-
-    // signal turkeyis carved
-    //print that father is carving the turkey
-    stringCopy(action, "%15s is carving the turkey", title);
-    print(action); 
-
-    delay(10);
-
-    for (i = 0; i < NUM_OTHERS; i++)
-        signal(carve_turkey);
-
-    // signal everyone is excused
-    for (i = 0; i < NUM_OTHERS; i++)
-        signal(excused);
-        
-    stringCopy(action, "%15s excusses everyone from the table", title);
-    print(action); 
-        
-    //print that father is asleep watching football
-    stringCopy(action, "%15s is asleep and watching football", title);
-    print(action); 
-}
-
-void child(int id) {
-    // init vars
-    string[8] title;
-    string[ACTION_LEN] action;
-
-    // set title
-    stringCopy(title, "Child");
-    sprintf(title, "%s %d", title, id);
-
-    // rake leaves
-    stringCopy(action, "%10s is raking leaves.", title);
-    print(action);
-    delay(2);
-    
-    // go on hayride
-    stringCopy(action, "%10s is waiting for a hayride.", title);
-    print(action);
-    enqueue(which_proc, title);
-
-    // clean up and sit at table
-    signal_seated();
-    stringCopy(action, "%10s is sitting at table.", title);
-    print(action);
-
-    // eat dinner
-    wait(carve_turkey);
-    stringCopy(action, "%10s is eating.", title);
-    print(action);
-
-    // done eating -> be excused
-    stringCopy(action, "%10s is done eating.", title);
-    print(action);
-    wait(excused);      // wait to be excused
-
-    // go out and play
-    stringCopy(action, "%10s goes out to play.", title);
-    print(action);
-}
-
-void relative(int id) {
-    // init vars
-    string[8] title;
-    string[ACTION_LEN] action;
-
-    // set title
-    stringCopy(title, "Relative");
-    sprintf(title, "%s %d", title, id);
-
-    // arrive at farm
-    stringCopy(action, "%10s arrives.", title);
-    print(action);
-
-    // go on hayride
-    stringCopy(action, "%10s is waiting for a hayride.", title);
-    print(action);
-    enqueue(which_proc, title);
-
-    // clean up and sit at table
-    signal_seated();
-    stringCopy(action, "%10s is sitting at table.", title);
-    print(action);
-
-    // eat dinner
-    wait(carve_turkey);
-    stringCopy(action, "%10s is eating.", title);
-    print(action);
-    delay(2);
-
-    // done eating -> be excused
-    stringCopy(action, "%10s is done eating.", title);
-    print(action);
-    wait(excused);      // wait to be excused
-
-    // go home
-    stringCopy(action, "%10s goes home.", title);
-    print(action);
-}
 
 main() {
     // initialize semaphores

@@ -3,12 +3,12 @@
 // * common action functions for thanksgiving *
 // ********************************************
 
-string[ACTION_LEN] actions_temp_str;
 string[NAME_LEN] temp_name;
 
 void hayride(string name, int type_num, int type_id) {
-    sprintf(actions_temp_str, "%10s is waiting for a hayride.", name);
-    print(actions_temp_str);
+    string[ACTION_LEN] temp_str;
+    sprintf(temp_str, "%10s is waiting for a hayride.", name);
+    print(temp_str);
 
     // add to hayride waiting queue
     enqueue(type_num, type_id);
@@ -22,11 +22,12 @@ void hayride(string name, int type_num, int type_id) {
 }
 
 void sit_at_table(string name) {
-    sprintf(actions_temp_str, "%10s has cleaned up and is sitting at table.", name);
-    print(actions_temp_str);
+    string[ACTION_LEN] temp_str;
+    sprintf(temp_str, "%10s has cleaned up and is sitting at table.", name);
+    print(temp_str);
 
     wait(seated);
-        num_seated = num_seated + 1;
+        num_seated++;
 
         if (num_seated == NUM_OTHERS) {
             signal(turkey_can_be_carved);
@@ -35,19 +36,22 @@ void sit_at_table(string name) {
 }
 
 void eat_dinner(string name) {
+    string[ACTION_LEN] temp_str;
+
     // wait for turkey to be carved
     wait(turkey_is_carved);
 
-    sprintf(actions_temp_str, "%10s is eating.", name);
-    print(actions_temp_str);
+    sprintf(temp_str, "%10s is eating.", name);
+    print(temp_str);
 
     // eating takes time
     delay(2);
 }
 
 void is_finished_eating(string name) {
-    sprintf(actions_temp_str, "%10s is done eating.", name);
-    print(actions_temp_str);
+    string[ACTION_LEN] temp_str;
+    sprintf(temp_str, "%10s is done eating.", name);
+    print(temp_str);
     
     // wait to be excused
     wait(excused);
