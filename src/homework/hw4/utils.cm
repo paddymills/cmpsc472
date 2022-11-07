@@ -3,12 +3,15 @@
 // *  utility functions called by processes  *
 // *******************************************
 
-semaphore seated;               // number of people seated (excludes Father)
+semaphore seated;               // mutual exclusion for num_seated
+semaphore wait_excused;         // mutual exclusion for done_eating
 semaphore turkey_can_be_carved; // turkey is ready to be carved
 semaphore turkey_is_carved;     // turkey is carved
+semaphore can_be_excused;       // everyone is ready to be excused
 semaphore excused;              // to be excused
 
 int num_seated = 0;             // number of people seated at table
+int done_eating = 0;            // number of people who have finished eating
 const int ACTION_LEN = 64;      // length of action string
 const int NUM_OTHERS = 15;      // number of people not father (1 mother + 8 children + 6 relatives)
 const int NAME_LEN = 16;        // length of all name strings
@@ -23,8 +26,10 @@ int hayride_size;
 void init_thanksgiving() {
     // initialize semaphores
     initialsem(seated, 1);
+    initialsem(wait_excused, 1);
     initialsem(turkey_can_be_carved, 0);
     initialsem(turkey_is_carved, 0);
+    initialsem(can_be_excused, 0);
     initialsem(excused, 0);
 }
 

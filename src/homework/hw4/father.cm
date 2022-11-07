@@ -61,6 +61,9 @@ void excuse_everyone_from_table() {
     sprintf(father_temp_str, "%15s excuses everyone from the table", father_title);
     print(father_temp_str); 
 
+    // wait for everyone to be done eating (and ready to be excused)
+    wait(can_be_excused);
+
     // as with turkey_is_carved, this is a consumable semaphore
     //   so we need to signal for each non-father person
     for (i = 0; i < NUM_OTHERS; i++)

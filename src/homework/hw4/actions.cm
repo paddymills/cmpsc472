@@ -52,6 +52,14 @@ void is_finished_eating(string name) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s is done eating.", name);
     print(temp_str);
+
+    wait(wait_excused);
+        done_eating++;
+
+        if (done_eating == NUM_OTHERS) {
+            signal(can_be_excused);
+        }
+    signal(wait_excused);
     
     // wait to be excused
     wait(excused);
