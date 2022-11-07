@@ -23,6 +23,7 @@ void enqueue(int p_type, int p_id) {
 }
 
 void dequeue(int pid) {
+    // TODO: document this
     // remove a person from the queue by a given PID
     int i;
     int found = 0;  // has PID been found
