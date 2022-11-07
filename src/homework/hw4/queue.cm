@@ -1,10 +1,10 @@
 
 const int QUEUE_SIZE = 16;
 
-int end = 0;
-int procs[QUEUE_SIZE];
-int types[QUEUE_SIZE];
-int type_ids[QUEUE_SIZE];
+int end = 0;                // for tracking the next empty element in arrays
+int procs[QUEUE_SIZE];      // process ID
+int types[QUEUE_SIZE];      // person type (see utils.cm)
+int type_ids[QUEUE_SIZE];   // person id (i.e. `Child 4` = 4)
 
 // types array: array of corresponding types for each person
 //    see utils.cm
@@ -13,27 +13,32 @@ semaphore access = 1;   // mutual exclusion for queue
 
 void enqueue(int p_type, int p_id) {
     // add a person to the queue
+
+    // lock queue
     wait(access);
         procs[end] = which_proc();  // store calling process's PID
-        types[end] = p_type;
-        type_ids[end] = p_id;
+        types[end] = p_type;        // process (person) type
+        type_ids[end] = p_id;       // process (person) iteration number
 
         end++;
     signal(access);
 }
 
 void dequeue(int pid) {
-    // TODO: document this
     // remove a person from the queue by a given PID
-    int i;
+
+    int i;          // for iteration
     int found = 0;  // has PID been found
     
+    // lock queue
     wait(access);
+
         // delete item
         for (i=0; i<QUEUE_SIZE; i++) {
-            if ( procs[i] == pid )
+            if ( procs[i] == pid )  // PID found
                 found = 1;
 
+            // shift queue elements
             if ( found == 1 && i < QUEUE_SIZE-1 ) {
                 procs[i] = procs[i+1];
                 types[i] = types[i+1];
@@ -41,21 +46,27 @@ void dequeue(int pid) {
             }
         }
 
+        // calculate new end (1st empty element)
         for (i=0; i<QUEUE_SIZE; i++) {
             if ( procs[i] == 0 ) {
                 end = i;
                 break;
             }
         }
+    
+    // unlock queue
     signal(access);
 }
 
 int get_queue_index(int pid) {
+    // gets the queue's index of a given PID
+
     int i;
     for (i=0; i<end; i++) {
-        if ( procs[i] == pid )
+        if ( procs[i] == pid )  // PID found
             return i;
     }
 
+    // probably won't happen, but default should not be an index
     return -1;
 }

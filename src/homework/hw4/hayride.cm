@@ -1,4 +1,5 @@
-//
+// calculates the persons name
+//    i.e. p_type=2, p_id=5 -> `Relative 5`
 void append_person_name(string str, int p_type, int p_id) {
     if (p_type == MOTHER_TYPE) {
         sprintf(str, "%s Mother", str);
