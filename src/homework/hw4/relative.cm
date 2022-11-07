@@ -3,6 +3,9 @@ void arrive(string name) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s has arrived.", name);
     print(temp_str);
+
+    // maybe they talk for a little
+    delay(1);
 }
 
 void go_home(string name) {

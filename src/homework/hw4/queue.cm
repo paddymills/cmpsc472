@@ -36,6 +36,13 @@ void dequeue(int pid) {
                 type_ids[i] = type_ids[i+1];
             }
         }
+
+        for (i=0; i<QUEUE_SIZE; i++) {
+            if ( procs[i] == 0 ) {
+                end = i;
+                break;
+            }
+        }
     signal(access);
 }
 
