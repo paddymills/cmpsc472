@@ -78,7 +78,7 @@ void build_hayride() {
         }
 
         // child
-        else {
+        else if ( i_type == CHILD_TYPE ) {
             if ( num_adults == 0 && num_children < 3 ) {
                 picked[hayride_size] = i;
                 hayride_size++;
