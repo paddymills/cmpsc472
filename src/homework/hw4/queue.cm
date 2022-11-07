@@ -6,12 +6,15 @@ int procs[QUEUE_SIZE];
 int types[QUEUE_SIZE];
 int type_ids[QUEUE_SIZE];
 
-semaphore access = 1;
+// types array: array of corresponding types for each person
+//    see utils.cm
+
+semaphore access = 1;   // mutual exclusion for queue
 
 void enqueue(int p_type, int p_id) {
-    // must use access semaphore, because this is called in main
+    // add a person to the queue
     wait(access);
-        procs[end] = which_proc();
+        procs[end] = which_proc();  // store calling process's PID
         types[end] = p_type;
         type_ids[end] = p_id;
 
@@ -20,9 +23,9 @@ void enqueue(int p_type, int p_id) {
 }
 
 void dequeue(int pid) {
-    // dequeue a given pid
+    // remove a person from the queue by a given PID
     int i;
-    int found = 0;
+    int found = 0;  // has PID been found
     
     wait(access);
         // delete item

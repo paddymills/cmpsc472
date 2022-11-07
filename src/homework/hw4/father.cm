@@ -40,7 +40,7 @@ void give_hayrides() {
 void carve_turkey() {
     int i;  // for iteration
 
-    // wait for everyone to be seated
+    // wait for everyone to be num_seated_mutex
     wait(turkey_can_be_carved);
     
     sprintf(father_temp_str, "%15s is carving the turkey.", father_title);

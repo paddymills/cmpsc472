@@ -1,4 +1,5 @@
 
+//prints that child x is racking leaves
 void rake_leaves(string name) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s is raking leaves.", name);
@@ -8,6 +9,7 @@ void rake_leaves(string name) {
     delay(5);
 }
 
+//prints child x is going out to play
 void go_out_and_play(string name) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s goes out to play.", name);

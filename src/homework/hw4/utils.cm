@@ -3,30 +3,31 @@
 // *  utility functions called by processes  *
 // *******************************************
 
-semaphore seated;               // mutual exclusion for num_seated
-semaphore wait_excused;         // mutual exclusion for done_eating
+semaphore num_seated_mutex;     // mutual exclusion for num_num_seated_mutex
+semaphore done_eating_mutex;    // mutual exclusion for done_eating
 semaphore turkey_can_be_carved; // turkey is ready to be carved
 semaphore turkey_is_carved;     // turkey is carved
 semaphore can_be_excused;       // everyone is ready to be excused
 semaphore excused;              // to be excused
 
-int num_seated = 0;             // number of people seated at table
+int num_seated = 0;             // number of people num_seated_mutex at table
 int done_eating = 0;            // number of people who have finished eating
 const int ACTION_LEN = 64;      // length of action string
 const int NUM_OTHERS = 15;      // number of people not father (1 mother + 8 children + 6 relatives)
 const int NAME_LEN = 16;        // length of all name strings
 
-const int MOTHER_TYPE = 1;
+// person types for queue
+const int MOTHER_TYPE   = 1;
 const int RELATIVE_TYPE = 2;
-const int CHILD_TYPE = 3;
+const int CHILD_TYPE    = 3;
 
 int hayride_pids[3];            // because baci cannot take a array pointer as an argument
-int hayride_size;
+int hayride_size;               // number of people on built hayride
 
 void init_thanksgiving() {
     // initialize semaphores
-    initialsem(seated, 1);
-    initialsem(wait_excused, 1);
+    initialsem(num_seated_mutex, 1);
+    initialsem(done_eating_mutex, 1);
     initialsem(turkey_can_be_carved, 0);
     initialsem(turkey_is_carved, 0);
     initialsem(can_be_excused, 0);
@@ -34,10 +35,13 @@ void init_thanksgiving() {
 }
 
 atomic void print(string str) {
+    // all prints MUST use this method
     cout << str << endl;
 }
 
 void delay(int duration) {
+    // imitate a passage of time
+
     int i;
     int delay;
     
