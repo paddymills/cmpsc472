@@ -3,8 +3,6 @@
 // * common action functions for thanksgiving *
 // ********************************************
 
-string[NAME_LEN] temp_name;
-
 void hayride(string name, int type_num, int type_id) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s is waiting for a hayride.", name);
@@ -21,20 +19,23 @@ void hayride(string name, int type_num, int type_id) {
     delay(2);
 }
 
+//will print who cleaned up and is sitting at the table
 void sit_at_table(string name) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s has cleaned up and is sitting at table.", name);
     print(temp_str);
 
-    wait(seated);
+    wait(num_seated_mutex);
         num_seated++;
-
+        
+        //if everyone is seated, the turkey can be carved
         if (num_seated == NUM_OTHERS) {
             signal(turkey_can_be_carved);
         }
-    signal(seated);
+    signal(num_seated_mutex);
 }
 
+//prints that person x is eating 
 void eat_dinner(string name) {
     string[ACTION_LEN] temp_str;
 
@@ -48,10 +49,20 @@ void eat_dinner(string name) {
     delay(2);
 }
 
+//prints that person x is done eating
 void is_finished_eating(string name) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s is done eating.", name);
     print(temp_str);
+
+    wait(done_eating_mutex);
+        done_eating++;
+
+        //if everyone is done eating then everyone can be excused
+        if (done_eating == NUM_OTHERS) {
+            signal(can_be_excused);
+        }
+    signal(done_eating_mutex);
     
     // wait to be excused
     wait(excused);

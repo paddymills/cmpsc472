@@ -1,10 +1,15 @@
 
 void arrive(string name) {
+    //relative x arrives
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s has arrived.", name);
     print(temp_str);
+
+    // maybe they talk for a little
+    delay(1);
 }
 
+//relative goes home
 void go_home(string name) {
     string[ACTION_LEN] temp_str;
     sprintf(temp_str, "%10s goes home", name);

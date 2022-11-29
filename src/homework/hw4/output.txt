@@ -15,7 +15,7 @@ Relative 3 is waiting for hayride.
    Child 1 is sitting at table. 
       Mother is waiting for hayride.
          Father gives hayride to Child 2, Child 8 and Mother.
-... (assume all have had hayrides and are seated at table)
+... (assume all have had hayrides and are num_seated_mutex at table)
          Father carves turkey.
    Child 1 is eating. 
    Child 3 is eating. 
