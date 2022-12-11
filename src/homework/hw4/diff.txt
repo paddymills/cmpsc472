@@ -1,0 +1,39 @@
+diff --git a/src/homework/hw4/child.cm b/src/homework/hw4/child.cm
+index 80c11f2..429adea 100644
+--- a/src/homework/hw4/child.cm
++++ b/src/homework/hw4/child.cm
+@@ -6,7 +6,7 @@ void rake_leaves(string name) {
+     print(temp_str);
+ 
+     // raking leaves takes time
+-    delay(5);
++    delay(8);
+ }
+ 
+ //prints child x is going out to play
+diff --git a/src/homework/hw4/father.cm b/src/homework/hw4/father.cm
+index de49d0b..720b679 100644
+--- a/src/homework/hw4/father.cm
++++ b/src/homework/hw4/father.cm
+@@ -6,7 +6,7 @@ void prepare_hayride() {
+     //Print that father is hooking up the horses
+     sprintf(father_temp_str, "%15s is hooking up the horses", father_title);
+     print(father_temp_str);
+-    delay(10);
++    delay(3);
+     
+     //print that the horses are hooked up and ready for hayrides
+     sprintf(father_temp_str, "%15s is done hooking up the horses.", father_title);
+diff --git a/src/homework/hw4/relative.cm b/src/homework/hw4/relative.cm
+index 9f06d93..36e0c20 100644
+--- a/src/homework/hw4/relative.cm
++++ b/src/homework/hw4/relative.cm
+@@ -6,7 +6,7 @@ void arrive(string name) {
+     print(temp_str);
+ 
+     // maybe they talk for a little
+-    delay(1);
++    delay(8);
+ }
+ 
+ //relative goes home

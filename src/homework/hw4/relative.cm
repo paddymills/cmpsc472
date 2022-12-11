@@ -6,7 +6,7 @@ void arrive(string name) {
     print(temp_str);
 
     // maybe they talk for a little
-    delay(1);
+    delay(8);
 }
 
 //relative goes home

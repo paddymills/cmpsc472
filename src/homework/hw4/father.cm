@@ -6,7 +6,7 @@ void prepare_hayride() {
     //Print that father is hooking up the horses
     sprintf(father_temp_str, "%15s is hooking up the horses", father_title);
     print(father_temp_str);
-    delay(10);
+    delay(3);
     
     //print that the horses are hooked up and ready for hayrides
     sprintf(father_temp_str, "%15s is done hooking up the horses.", father_title);
